@@ -6,19 +6,17 @@ import requests
 import time
 import pymongo
 
+
 client = pymongo.MongoClient('mongodb://localhost:27017')
 db = client.mars_db
 collection = db.images
 
-print(client.list_database_names())
- 
+
 dblist = client.list_database_names()
-print(dblist)
 
 if 'mars_db' in dblist:
-    print('Database exists')
     db.drop_collection('images')
-    print('mars_db dropped')
+
 
 
 url = "https://redplanetscience.com/"
@@ -30,9 +28,9 @@ html = browser.html
 
 
 news_soup = BeautifulSoup(html, 'html.parser')
+
 nasa_news = news_soup.find("div", class_="list_text")
 news_title = nasa_news.find("div", class_="content_title")
-
 
 target_site = 'https://spaceimages-mars.com'
 browser.visit(target_site)
@@ -64,11 +62,9 @@ hemi_links = hemi_soup.find("div", class_='collapsible results')
 
 mars_hemispheres = hemi_links.find_all('div', class_='item')
 
-print(hemi_links)
-
 
 hemisphere_image_urls = []
-    # start loop
+
 for i in mars_hemispheres:
     hemisphere = i.find('div', class_="description")
     title = hemisphere.h3.text  
@@ -83,9 +79,11 @@ for i in mars_hemispheres:
     image_dict['img_url'] = hemi_url +"/"+ image_url        
     hemisphere_image_urls.append(image_dict)
 
+
 browser.back()
 
 browser.quit()
+
 
 mission_to_mars ={
     'news_title' : nasa_news.get_text(),
